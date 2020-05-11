@@ -7,9 +7,9 @@
                 text-color="#fff"
                 active-text-color="#ffd04b">
             <span class="title">个性化学习资源推荐系统</span>
-            <el-menu-item :index="'/login'">
+            <el-menu-item @click="logout">
                 <i class="el-icon-s-custom"></i>
-                <span slot="title">退出</span>
+                <span slot="title" >退出</span>
             </el-menu-item>
         </el-menu>
     </div>
@@ -31,6 +31,18 @@
                 } else {
                     return this.$route.path
                 }
+            }
+        },
+        methods:{
+            logout () {
+                var _this = this
+                this.$axios.get('/logout').then(resp => {
+                    if (resp.data.code === 200) {
+                        // 前后端状态保持一致
+                        _this.$store.commit('logout')
+                        _this.$router.replace('/login')
+                    }
+                })
             }
         }
     }

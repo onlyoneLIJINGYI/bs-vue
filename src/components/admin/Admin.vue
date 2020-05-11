@@ -9,8 +9,8 @@
 </template>
 
 <script>
-    import NavMenu from './admin/NavMenu'
-    import NavHeader from './admin/NavHeader'
+    import NavMenu from './NavMenu'
+    import NavHeader from './NavHeader'
     export default {
         name:"Admin",
         components:{

@@ -24,6 +24,7 @@
         },
         methods: {
             searchClick () {
+                alert('click')
                 this.$emit('onSearch')
             }
         }

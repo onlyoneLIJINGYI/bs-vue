@@ -13,8 +13,8 @@
                  text-color="#fff"
                  active-text-color="#ffd04b"
         >
-            <template v-for="(menu) in adminMenuList">
-                <el-submenu v-if="menu.children.length" :index="menu.path" :key="menu.id">
+            <template v-for="(menu,i) in adminMenuList">
+                <el-submenu  v-if="menu.children.length" :index="(i).toString()" :key="menu.id">
                     <template slot="title">
                         <i :class="menu.iconCls"></i>
                         <span slot="title">{{menu.nameZh}}</span>
@@ -36,46 +36,6 @@
         data(){
             return{
                 isCollapse:false,
-                menuList:[
-                    {id:1,title:'首页',path:'/index'},
-                    {id:2,title:'用户管理',path:'2',
-                        subMenu:[
-                        {
-                            id:1,
-                            title:'用户权限',
-                            path:'/right'
-                        },{
-                                id:2,
-                                title:'用户功能',
-                                path:'1-2'
-                          }
-                        ]},
-                    {id:3,title:'资源管理',path:'3',
-                        subMenu:[
-                            {
-                                id:1,
-                                title:'资源搜索',
-                                path:'2-1'
-                            },{
-                                id:2,
-                                title:'资源评价',
-                                path:'2-2'
-                            },{
-                                id:3,
-                                title:'资源推荐',
-                                path:'2-3'
-                            },{
-                                id:4,
-                                title:'资源上传',
-                                path:''
-                            },{
-                                id:5,
-                                title:'资源下载',
-                                path:''
-                            }
-                        ]
-                    }
-                ]
             }
         },
         computed:{
@@ -90,6 +50,7 @@
             },
             handleOpen(key, keyPath) {
                 console.log(key, keyPath);
+                console.log(this.adminMenuList);
             },
             handleClose(key, keyPath) {
                 console.log(key, keyPath);
@@ -112,13 +73,13 @@
         border:0;
     }
     .menu-btn{
-        color: green;
+        color: rgb(255, 208, 75);
         background: #2f4050;
         border: 0;
         font-size: 20px;
     }
     .menu-btn:hover,.menu-btn:focus{
-        color: green;
+        color: rgb(255, 208, 75);
         background:rgb(38,51,64);
         border: 0;
         font-size: 20px;

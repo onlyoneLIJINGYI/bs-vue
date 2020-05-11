@@ -18,6 +18,12 @@
                 </el-input>
             </el-form-item>
             <el-form-item>
+                <el-radio-group v-model="radio" text-color="ccc">
+                    <el-radio :label="1">普通用户</el-radio>
+                    <el-radio :label="2">管理员</el-radio>
+                </el-radio-group>
+            </el-form-item>
+            <el-form-item>
                 <el-button type="primary"
                            style="width: 40%;background: #505458;border: none"
                            v-on:click="login"
@@ -25,7 +31,9 @@
                 >
                     登录
                 </el-button>
-                <router-link to="register"><el-button type="primary" style="width: 40%;background: #505458;border: none">注册</el-button></router-link>
+                <router-link to="register">
+                    <el-button type="primary" size="medium" style="margin-left:30px;width: 40%;background: #505458;border: none">注册</el-button>
+                </router-link>
             </el-form-item>
         </el-form>
     </div>
@@ -42,7 +50,8 @@
                     username: 'admin',
                     password: '123'
                 },
-                responseResult: []
+                responseResult: [],
+                radio: 2
             }
         },
         methods: {
@@ -52,17 +61,25 @@
                         username: this.loginForm.username,
                         password: this.loginForm.password
                     })
-                    .then(successResponse => {
-                        console.log(successResponse)
-                        if (successResponse.data.code === 200) {
-                            alert('登录成功')
-                            this.$store.commit('login',this.loginForm)
+                    .then(resp => {
+                        if (resp.data.code === 200) {
+                            this.$alert('登录成功', '提示', {
+                                confirmButtonText: '确定'
+                            })
+                            var data = resp.data.result
+                            this.$store.commit('login', data)
                             //使用router.replace而不使用router.push方法，replace不会向history 添加新记录，即替换当前路由，当浏览器后退时不会再后退到login路由
                             //获取进入当前login路由前上一个路由，登录成功重新跳转到该路由，不存在则跳转到home路由下
-                            var path=this.$route.query.redirect
-                            this.$router.replace({path: path === '/' || path === undefined ? '/home' : path})
-                        }else if(successResponse.data.code === 400){
-                            console.log('密码错误，请重新登录')
+                            if(data=='admin'){
+                                this.$router.replace({path: '/admin' })
+                            }else{
+                                var path=this.$route.query.redirect
+                                this.$router.replace({path: path === '/' || path === undefined ? '/home' : path})
+                            }
+                        }else {
+                            this.$alert(resp.data.message, '提示', {
+                                confirmButtonText: '确定'
+                            })
                         }
                     })
                     .catch(failResponse => {
@@ -85,9 +102,9 @@
     .login-form {
         border-radius: 15px;
         background-clip: padding-box;
-        margin: 60px auto;
-        width: 280px;
-        padding: 30px 40px 15px 40px;
+        margin: 120px auto;
+        width: 360px;
+        padding: 40px 35px 20px 35px;
         background-color: rgba(222, 220, 220, 0.3);
         border: 1px solid #eaeaea;
         box-shadow: 0 0 25px #cac6c6;

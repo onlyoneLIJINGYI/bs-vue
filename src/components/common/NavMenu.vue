@@ -23,9 +23,9 @@
         data () {
             return {
                 navList: [
-                    {name: '/library', navItem: '首页'},
-                    {name: '/index', navItem: '我的资源'},
-                    {name: '/admin', navItem: '个人中心'}
+                    {name: '/index', navItem: '首页'},
+                    {name: '/myresource', navItem: '我的资源'},
+                    {name: '/usercenter', navItem: '个人中心'}
                 ]
             }
         },

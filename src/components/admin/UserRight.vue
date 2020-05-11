@@ -8,29 +8,23 @@
 
         <!-- 卡片视图区域 -->
         <el-card class="box-card">
-            <!-- 搜索与添加区域 -->
+            <!-- 添加区域 -->
             <el-row :gutter="30">
-                <el-col :span="8">
-                    <el-input placeholder="请输入内容" class="input-with-select" v-model="queryInfo.query" clearable @clear="getUserList">
-                        <el-button slot="append" icon="el-icon-search" @click="getUserList"></el-button>
-                    </el-input>
-                </el-col>
-
                 <el-col :span="3">
                     <el-button type="primary" @click="addDiglogVisable = true">添加用户</el-button>
                 </el-col>
             </el-row>
 
             <!-- 用户列表区域 -->
-            <el-table :data="userList" border  height="523px">
+            <el-table :data="infoList" border  height="523px">
                 <el-table-column type="index"></el-table-column>
                 <el-table-column prop="username" label="用户"></el-table-column>
                 <el-table-column prop="email" label="邮箱"></el-table-column>
-                <el-table-column prop="mobile" label="电话"></el-table-column>
-                <el-table-column prop="roleName" label="角色"></el-table-column>
+                <el-table-column prop="phone" label="电话"></el-table-column>
+                <el-table-column prop="roles[0].nameZh" label="角色"></el-table-column>
                 <el-table-column label="状态">
                     <template slot-scope="scope">
-                        <el-switch v-model="scope.row.state" @change="userStateChange(scope.row)"></el-switch>
+                        <el-switch v-model="scope.row.enabled" @change="userStateChange(scope.row)"></el-switch>
                     </template>
                 </el-table-column>
                 <el-table-column label="操作" width="180px">
@@ -56,7 +50,11 @@
             ></el-pagination>
 
             <!-- 添加用户对话框 -->
-            <el-dialog title="添加用户" :visible.sync="addDiglogVisable" width="50%" @close="diglogClose('add')">
+            <el-dialog title="添加用户"
+                       :visible.sync="addDiglogVisable"
+                       width="50%"
+                       :modal-append-to-body='false'
+                       @close="diglogClose('add')">
                 <!-- 内容主体区域 -->
                 <el-form :model="addForm" :rules="formRules" ref="addFormRef" label-width="70px">
                     <el-form-item label="用户名" prop="username">
@@ -65,11 +63,14 @@
                     <el-form-item label="密码" prop="password">
                         <el-input v-model="addForm.password"></el-input>
                     </el-form-item>
+                    <el-form-item label="真实姓名" prop="name">
+                        <el-input v-model="addForm.name"></el-input>
+                    </el-form-item>
                     <el-form-item label="邮箱" prop="email">
                         <el-input v-model="addForm.email"></el-input>
                     </el-form-item>
-                    <el-form-item label="手机号" prop="mobile">
-                        <el-input v-model="addForm.mobile"></el-input>
+                    <el-form-item label="手机号" prop="phone">
+                        <el-input v-model="addForm.phone"></el-input>
                     </el-form-item>
                 </el-form>
                 <!-- 底部区域 -->
@@ -80,8 +81,8 @@
             </el-dialog>
 
             <!-- 修改用户对话框 -->
-            <el-dialog title="修改用户" :visible.sync="editDiglogVisable" width="50%" @close="diglogClose('edit')">
-                <!-- 内容主体区域 -->
+          <!--  <el-dialog title="修改用户" :visible.sync="editDiglogVisable" width="50%" @close="diglogClose('edit')">
+                &lt;!&ndash; 内容主体区域 &ndash;&gt;
                 <el-form :model="editForm" :rules="formRules" ref="editFormRef" label-width="70px">
                     <el-form-item label="用户名">
                         <el-input v-model="editForm.username" disabled=""></el-input>
@@ -93,16 +94,20 @@
                         <el-input v-model="editForm.mobile"></el-input>
                     </el-form-item>
                 </el-form>
-                <!-- 底部区域 -->
+                &lt;!&ndash; 底部区域 &ndash;&gt;
                 <span slot="footer" class="dialog-footer">
           <el-button @click="editDiglogVisable = false">取 消</el-button>
           <el-button type="primary" @click="editUserInfo">确 定</el-button>
         </span>
             </el-dialog>
-
+-->
             <!-- 分配角色 -->
-            <el-dialog title="分配角色" :visible.sync="setRoleDiglogVisable" width="50%" @close="setRoleDiglogClose">
-                <!-- 内容主体区域 -->
+            <!--<el-dialog title="分配角色"
+                       :modal-append-to-body='false'
+                       :visible.sync="setRoleDiglogVisable"
+                       width="50%"
+                       @close="setRoleDiglogClose">
+                &lt;!&ndash; 内容主体区域 &ndash;&gt;
                 <div>
                     <p>当前的用户: {{ userInfo.username }}</p>
                     <p>当前的角色: {{ userInfo.roleName }}</p>
@@ -113,18 +118,19 @@
                         </el-select>
                     </p>
                 </div>
-                <!-- 底部区域 -->
+                &lt;!&ndash; 底部区域 &ndash;&gt;
                 <span slot="footer" class="dialog-footer">
           <el-button @click="setRoleDiglogVisable = false">取 消</el-button>
           <el-button type="primary" @click="saveRoleInfo">确 定</el-button>
         </span>
-            </el-dialog>
+            </el-dialog>-->
         </el-card>
     </div>
 </template>
 
 <script>
     export default {
+        name:"UserRight",
         data() {
             // 验证邮箱的规则
             var checkEmail = (rule, value, cb) => {
@@ -147,125 +153,20 @@
                 cb(new Error('请输入合法的手机号'))
             }
             return {
+                infoList:[],
                 queryInfo: {
                     query: '',
                     pagenum: 2,
                     pagesize: 10
                 },
-                userList: [
-                    {
-                    username:'admin',
-                    email:'admin@qq.com',
-                    mobile:'12345688888',
-                    roleName:'管理员',
-                },{
-                username:'lijingyi',
-                    email:'123@qq.com',
-                    mobile:'12345688888',
-                    roleName:'普通用户',
-            },{
-                    username:'ljy',
-                    email:'ljy@qq.com',
-                    mobile:'12345688888',
-                    roleName:'普通用户',
-                },{
-                    username:'pony',
-                    email:'pony@qq.com',
-                    mobile:'12345688888',
-                    roleName:'普通用户',
-                },{
-                    username:'lijingyi',
-                    email:'123@qq.com',
-                    mobile:'12345688888',
-                    roleName:'普通用户',
-                },{
-                    username:'lijingyi',
-                    email:'123@qq.com',
-                    mobile:'12345688888',
-                    roleName:'普通用户',
-                },{
-                    username:'lijingyi',
-                    email:'123@qq.com',
-                    mobile:'12345688888',
-                    roleName:'普通用户',
-                },{
-                    username:'lijingyi',
-                    email:'123@qq.com',
-                    mobile:'12345688888',
-                    roleName:'普通用户',
-                },{
-                    username:'lijingyi',
-                    email:'123@qq.com',
-                    mobile:'12345688888',
-                    roleName:'普通用户',
-                },{
-                    username:'lijingyi',
-                    email:'123@qq.com',
-                    mobile:'12345688888',
-                    roleName:'普通用户',
-                },{
-                    username:'lijingyi',
-                    email:'123@qq.com',
-                    mobile:'12345688888',
-                    roleName:'普通用户',
-                },{
-                    username:'lijingyi',
-                    email:'123@qq.com',
-                    mobile:'12345688888',
-                    roleName:'普通用户',
-                },{
-                    username:'lijingyi',
-                    email:'123@qq.com',
-                    mobile:'12345688888',
-                    roleName:'普通用户',
-                },{
-                    username:'lijingyi',
-                    email:'123@qq.com',
-                    mobile:'12345688888',
-                    roleName:'普通用户',
-                },{
-                    username:'lijingyi',
-                    email:'123@qq.com',
-                    mobile:'12345688888',
-                    roleName:'普通用户',
-                },{
-                    username:'lijingyi',
-                    email:'123@qq.com',
-                    mobile:'12345688888',
-                    roleName:'普通用户',
-                },{
-                    username:'lijingyi',
-                    email:'123@qq.com',
-                    mobile:'12345688888',
-                    roleName:'普通用户',
-                },{
-                    username:'lijingyi',
-                    email:'123@qq.com',
-                    mobile:'12345688888',
-                    roleName:'普通用户',
-                },{
-                    username:'lijingyi',
-                    email:'123@qq.com',
-                    mobile:'12345688888',
-                    roleName:'普通用户',
-                },{
-                    username:'lijingyi',
-                    email:'123@qq.com',
-                    mobile:'12345688888',
-                    roleName:'普通用户',
-                },{
-                    username:'lijingyi',
-                    email:'123@qq.com',
-                    mobile:'12345688888',
-                    roleName:'普通用户',
-                }],
                 total: 12,
                 addDiglogVisable: false,
                 addForm: {
                     username: '',
                     password: '',
+                    name: '',
                     email: '',
-                    mobile: ''
+                    phone: ''
                 },
 
                 editForm: {},
@@ -296,10 +197,41 @@
                 selectedRoleId: ''
             }
         },
-        created() {
+        mounted () {
+            this.loadUserInfo()
         },
-
         methods: {
+            loadUserInfo(){
+               this.$axios.get('/admin/user').then(resp=>{
+                   if (resp.data) {
+                       console.log(resp.data.result)
+                       this.infoList = resp.data.result
+                   }
+               })
+
+            },
+            addUser(){
+                this.$axios.post('/register',{
+                    username: this.addForm.username,
+                    password: this.addForm.password,
+                    name: this.addForm.name,
+                    phone: this.addForm.phone,
+                    email: this.addForm.email
+                }).then(resp => {
+                    console.log(resp)
+                    if (resp.data.code === 200) {
+                        alert('注册成功')
+                        this.addDiglogVisable = false
+                        this.loadUserInfo()
+                    } else {
+                        alert(resp.data.message)
+                        this.$refs.addFormRef.resetFields()
+                    }
+                })
+            },
+            deleteUserById(id){
+                console.log(id)
+            },
             editDiglogInit(){
                 this.editDiglogVisable=true
             },

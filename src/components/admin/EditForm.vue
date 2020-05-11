@@ -1,13 +1,14 @@
 <template>
     <div>
-        <i class="el-icon-circle-plus-outline"  @click="dialogFormVisible = true"></i>
+<!--        <i class="el-icon-circle-plus-outline"  @click="dialogFormVisible = true"></i>-->
         <el-dialog
                 title="添加/修改图书"
                 :visible.sync="dialogFormVisible"
+                :modal-append-to-body='false'
                 @close="clear">
             <el-form v-model="form" style="text-align: left" ref="dataForm">
                 <el-form-item label="名字" :label-width="formLabelWidth" prop="title">
-                    <el-input v-model="form.title" autocomplete="off" placeholder="不加《》"></el-input>
+                    <el-input v-model="form.title" autocomplete="off" placeholder="请输入资源标题"></el-input>
                 </el-form-item>
                 <el-form-item label="难度等级" :label-width="formLabelWidth" prop="author">
                     <el-input v-model="form.author" autocomplete="off"></el-input>
@@ -127,6 +128,10 @@
         font-size: 100px;
         float: left;
         cursor: pointer;
+    }
+    /deep/ .el-dialog{
+        box-shadow: 0 4px 8px 0 rgba(7, 17, 27, 0.1);
+        background-color: #f6f7f7;
     }
 </style>
 

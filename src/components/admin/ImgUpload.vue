@@ -1,7 +1,7 @@
 <template>
     <!--图片上传组件，使用element提供的el-upload组件，action 属性指定了上传操作对应的 api，
      multiple和 :limit 属性可以检测上传文件的数量，
-     :on-success 定义上传成功后触发的事件，触发父组件 EditForm.vue 的 onUpload 事件，把接收到的 URL 赋给图书信息表单的 cover 字段，这个 URL 需要我们在后端根据资源存放位置生成。提交后，数据库里就会保存服务器上的资源对应的 URL。
+     :on-success 定义上传成功后触发的事件，触发父组件 EditForm 的 onUpload 事件，把接收到的 URL 赋给图书信息表单的 cover 字段，这个 URL 需要我们在后端根据资源存放位置生成。提交后，数据库里就会保存服务器上的资源对应的 URL。
     -->
     <el-upload
             class="img-upload"
