@@ -2,7 +2,7 @@
     <el-card class="box-card">
         <div slot="header" class="clearfix">
             <span>首页</span>
-            <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
+            <el-button style="float: right; padding: 3px 0"  @click="recommend">操作按钮</el-button>
         </div>
         <div class="block">
             <el-timeline>
@@ -31,7 +31,26 @@
 
 <script>
     export default {
-        name:"AdminIndex"
+        name: "AdminIndex",
+        methods: {
+            recommend() {
+                this.$axios
+                    .post('/recommend', {
+                        id: 2
+                    })
+                    .then(resp => {
+                        console.log(resp)
+                        if (resp.data) {
+                            console.log('请求成功')
+                        } else {
+                            console.log('请求失败')
+                        }
+                    })
+                    .catch(failResponse => {
+                        console.log(failResponse)
+                    })
+            }
+        }
     }
 </script>
 

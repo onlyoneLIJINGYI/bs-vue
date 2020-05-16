@@ -11,7 +11,7 @@
             <!-- 搜索与添加区域 -->
             <el-row :gutter="30">
                 <el-col :span="3">
-                    <el-button type="primary" @click="editBook">添加资源</el-button>
+                    <el-button type="primary" @click="editBook('上传')">添加资源</el-button>
                 </el-col>
             </el-row>
 
@@ -55,12 +55,6 @@
                         label="资源来源"
                         fit>
                 </el-table-column>
-                <!--<el-table-column-->
-                <!--prop="abs"-->
-                <!--label="摘要"-->
-                <!--show-overflow-tooltip-->
-                <!--fit>-->
-                <!--</el-table-column>-->
                 <el-table-column
                         label="操作"
                         width="200">
@@ -68,7 +62,7 @@
                         <el-button type="primary"
                                    icon="el-icon-edit"
                                    size="mini"
-                                   @click.native.prevent="editBook(scope.row)">
+                                   @click.native.prevent="editBook('编辑',scope.row)">
 
                         </el-button>
                         <el-button type="danger"
@@ -82,7 +76,7 @@
             </el-table>
 
 <!--            编辑框-->
-            <edit-form @onSubmit="loadBooks()" ref="edit"></edit-form>
+            <edit-form @onSubmit="loadBooks()"  ref="edit"></edit-form>
 
             <!-- 分页区域 -->
            <!-- <el-pagination
@@ -111,6 +105,7 @@
         components: {EditForm},
         data () {
             return {
+                editFormTitle:'',
                 books: []
             }
         },
@@ -142,7 +137,9 @@
                     })
                 })
             },
-            editBook (item) {
+            editBook (title,item) {
+                this.editFormTitle=title
+                this.$refs.edit.title = title
                 this.$refs.edit.dialogFormVisible = true
                 this.$refs.edit.form = {
                     id: item.id,

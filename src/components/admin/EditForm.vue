@@ -2,7 +2,7 @@
     <div>
 <!--        <i class="el-icon-circle-plus-outline"  @click="dialogFormVisible = true"></i>-->
         <el-dialog
-                title="添加/修改图书"
+                :title="title+'资源'"
                 :visible.sync="dialogFormVisible"
                 :modal-append-to-body='false'
                 @close="clear">
@@ -58,6 +58,7 @@
         data () {
             return {
                 dialogFormVisible: false,
+                title:'',
                 form: {
                     id: '',
                     title: '',

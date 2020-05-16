@@ -14,7 +14,7 @@
                 <el-table-column type="index"></el-table-column>
                 <el-table-column prop="book.title" label="资源标题"></el-table-column>
                 <el-table-column prop="rate" label="评分"></el-table-column>
-                <el-table-column prop="comment" label="评论" fit></el-table-column>
+                <el-table-column prop="comment" label="评论" ></el-table-column>
                 <el-table-column prop="user.username" label="用户"></el-table-column>
                 <!--<el-table-column label="状态">
                     <template slot-scope="scope">

@@ -116,7 +116,10 @@ const initAdminMenu = (router, store) => {
                 name: "Admin",
                 component: Admin,
                 redirect:'/admin/index',
-                children:fmtRoutes
+                children:fmtRoutes,
+                meta:{
+                    requireAuth:true//设置meta字段以此判断当前路由是否需要拦截
+                }
             }]
             console.log(routerData)
             router.addRoutes(routerData)
@@ -132,10 +135,7 @@ const formatRoutes = (routes) => {
     routes.forEach(route => {
         if (route.children) {
             route.children = formatRoutes(route.children)
-            //对父级菜单的路由路径进行重定向
-
         }
-
         let fmtRoute = {
             path: route.path,
             component: () => import('../components/admin/' + route.component),
@@ -156,12 +156,15 @@ const formatRoutes = (routes) => {
 //通过路由beforeEach钩子函数，判断路由记录中的meta字段进行路由拦截，判断用户登录状态
 router.beforeEach((to,from,next)=>{
     //用户登录后要进入 /admin开头的路径时，调用initAdminMenu 方法初始化后台管理系统中当前用户对应的菜单信息
-    if (store.state.username && to.path.startsWith('/admin')) {
+    /*if (store.state.username && to.path.startsWith('/admin')) {
         initAdminMenu(router, store)
-    }
+    }*/
     if(to.matched.some((record)=> record.meta.requireAuth)){
     //$route.matched存放当前路由匹配到的所有路由记录，判断路由记录中的meta字段的requireAuth为true，判断登录状态
         if(store.state.username){
+            if (to.path.startsWith('/admin')) {
+                initAdminMenu(router, store)
+            }
             //store中user对象username属性为true，即继续进入下一路由，该种方法安全性较差，只在前端判断本地存储是否含有用户，可以通过修改localStorage存储的数据即可绕过前端路由限制
             // next()
             //路由拦截后向后端发送请求，由后端拦截器验证服务器端用户的登录状态

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-row style="height: 840px;">
+        <el-row style="">
             <search-bar @onSearch="searchResult" ref="searchBar"></search-bar>
             <el-tooltip effect="dark" placement="right"
                         v-for="item in books.slice((currentPage-1)*pagesize,currentPage*pagesize)"
